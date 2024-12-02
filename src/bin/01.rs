@@ -1,45 +1,43 @@
 use std::collections::HashMap;
 
+use advent_of_code::template::parse::split2;
+
 advent_of_code::solution!(1);
 
 pub fn part_one(input: &str) -> Option<u32> {
-    let mut l1 = Vec::<u32>::new();
-    let mut l2 = Vec::<u32>::new();
-    for line in input
-        .split('\n')
-        .map(|l| l.trim_ascii())
-        .filter(|l| !l.is_empty())
-    {
-        let mut parts = line.split_ascii_whitespace();
-        l1.push(parts.next().unwrap().parse().unwrap());
-        l2.push(parts.next().unwrap().parse().unwrap());
+    let mut list1 = vec![];
+    let mut list2 = vec![];
+
+    for (x1, x2) in split2::<u32, u32>(input) {
+        list1.push(x1);
+        list2.push(x2);
     }
 
-    l1.sort();
-    l2.sort();
+    list1.sort();
+    list2.sort();
 
-    Some(l1.iter().zip(l2.iter()).map(|(&a, &b)| a.abs_diff(b)).sum())
+    Some(
+        list1
+            .iter()
+            .zip(list2.iter())
+            .map(|(&a, &b)| a.abs_diff(b))
+            .sum(),
+    )
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    let mut list = Vec::<u32>::new();
-    let mut count = HashMap::<u32, u32>::new();
+    let mut list1 = vec![];
+    let mut count2 = HashMap::new();
 
-    for line in input
-        .lines()
-        .map(|l| l.trim_ascii())
-        .filter(|l| !l.is_empty())
-    {
-        let mut parts = line.split_ascii_whitespace();
-        let x1 = parts.next().unwrap().parse().unwrap();
-        let x2 = parts.next().unwrap().parse().unwrap();
-        list.push(x1);
-        *count.entry(x2).or_insert(0) += 1;
+    for (x1, x2) in split2::<u32, u32>(input) {
+        list1.push(x1);
+        *count2.entry(x2).or_insert(0) += 1;
     }
 
     Some(
-        list.iter()
-            .filter_map(|x| count.get(x).map(|c| x * c))
+        list1
+            .iter()
+            .filter_map(|x| count2.get(x).map(|c| x * c))
             .sum(),
     )
 }

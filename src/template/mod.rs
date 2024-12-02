@@ -2,6 +2,7 @@ use std::{env, fs};
 
 pub mod aoc_cli;
 pub mod commands;
+pub mod parse;
 pub mod runner;
 
 pub use day::*;
