@@ -148,6 +148,21 @@ pub fn split5<
     })
 }
 
+/// Parse some number items from each line, separated by ASCII whitespace
+pub fn splitn<'a, T: MyFromStr<'a>>(input: &'a str) -> impl 'a + Iterator<Item = Vec<T>> {
+    lines(input).filter_map(|line| {
+        let mut parts = line.split_ascii_whitespace();
+        let Some(part0) = parts.next() else {
+            // skip blank lines
+            cold();
+            return None;
+        };
+        let mut vec = vec![part0.my_parse().unwrap()];
+        vec.extend(parts.map(|part| part.my_parse().unwrap()));
+        Some(vec)
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
