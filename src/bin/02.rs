@@ -2,25 +2,22 @@ use advent_of_code::template::parse::splitn;
 
 advent_of_code::solution!(2);
 
+fn is_safe(report: &[u32]) -> bool {
+    if report.len() < 2 {
+        true
+    } else {
+        let increase = report[0] < report[1];
+        report
+            .iter()
+            .zip(report[1..].iter())
+            .all(|(&a, &b)| (1..=3).contains(&a.abs_diff(b)) && (a < b) == increase)
+    }
+}
+
 pub fn part_one(input: &str) -> Option<u32> {
     Some(
         splitn::<u32>(input)
-            .map(|report| {
-                if report.len() < 2 {
-                    1
-                } else {
-                    let increase = report[0] < report[1];
-                    if report
-                        .iter()
-                        .zip(report[1..].iter())
-                        .all(|(&a, &b)| (1..=3).contains(&a.abs_diff(b)) && (a < b) == increase)
-                    {
-                        1
-                    } else {
-                        0
-                    }
-                }
-            })
+            .map(|report| if is_safe(&report) { 1 } else { 0 })
             .sum(),
     )
 }
@@ -29,7 +26,7 @@ pub fn part_two(input: &str) -> Option<u32> {
     Some(
         splitn::<u32>(input)
             .map(|report| {
-                if report.len() < 3 {
+                if report.len() < 2 {
                     1
                 } else {
                     let mut sub = vec![];
@@ -37,10 +34,7 @@ pub fn part_two(input: &str) -> Option<u32> {
                         sub.clear();
                         sub.extend_from_slice(&report[..bad_idx]);
                         sub.extend_from_slice(&report[(bad_idx + 1)..]);
-                        let increase = sub[0] < sub[1];
-                        sub.iter()
-                            .zip(sub[1..].iter())
-                            .all(|(&a, &b)| (1..=3).contains(&a.abs_diff(b)) && (a < b) == increase)
+                        is_safe(&sub)
                     }) {
                         1
                     } else {
