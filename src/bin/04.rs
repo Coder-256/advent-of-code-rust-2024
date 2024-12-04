@@ -3,7 +3,7 @@ use advent_of_code::template::parse::lines;
 advent_of_code::solution!(4);
 
 pub fn part_one(input: &str) -> Option<u32> {
-    let grid: Vec<&[u8]> = lines(input).map(|l| l.as_bytes()).filter(|l| !l.is_empty()).collect();
+    let grid: Vec<&[u8]> = lines(input).map(|l| l.as_bytes()).collect();
     let m = grid.len() as i32;
     let n = grid[0].len() as i32;
 
@@ -38,20 +38,26 @@ pub fn part_one(input: &str) -> Option<u32> {
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    let grid: Vec<&[u8]> = lines(input).map(|l| l.as_bytes()).filter(|l| !l.is_empty()).collect();
+    let grid: Vec<&[u8]> = lines(input).map(|l| l.as_bytes()).collect();
     let m = grid.len();
     let n = grid[0].len();
 
     let mut res = 0;
 
-    for x0 in 0..(m-2) {
-        for y0 in 0..(n-2) {
-            match (grid[x0][y0], grid[x0][y0+2], grid[x0+1][y0+1], grid[x0+2][y0], grid[x0+2][y0+2]) {
-                (b'M', b'S', b'A', b'M', b'S') |
-                (b'S', b'S', b'A', b'M', b'M') |
-                (b'M', b'M', b'A', b'S', b'S') |
-                (b'S', b'M', b'A', b'S', b'M') => res += 1,
-                _ => ()
+    for x0 in 0..(m - 2) {
+        for y0 in 0..(n - 2) {
+            match (
+                grid[x0][y0],
+                grid[x0][y0 + 2],
+                grid[x0 + 1][y0 + 1],
+                grid[x0 + 2][y0],
+                grid[x0 + 2][y0 + 2],
+            ) {
+                (b'M', b'S', b'A', b'M', b'S')
+                | (b'S', b'S', b'A', b'M', b'M')
+                | (b'M', b'M', b'A', b'S', b'S')
+                | (b'S', b'M', b'A', b'S', b'M') => res += 1,
+                _ => (),
             }
         }
     }

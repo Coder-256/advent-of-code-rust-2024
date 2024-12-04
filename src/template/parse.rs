@@ -42,7 +42,7 @@ impl MyParse for str {
     }
 }
 
-pub fn lines(input: &str) -> impl Iterator<Item = &str> {
+pub fn lines_untrimmed(input: &str) -> impl Iterator<Item = &str> {
     input.split('\n')
 }
 
@@ -51,7 +51,7 @@ fn cold() {}
 
 /// Parse one item from each line
 pub fn split1<'a, T: MyFromStr<'a>>(input: &'a str) -> impl 'a + Iterator<Item = T> {
-    lines(input).filter_map(|line| {
+    lines_untrimmed(input).filter_map(|line| {
         let line = line.trim_ascii();
         if line.is_empty() {
             // skip blank lines
@@ -63,11 +63,15 @@ pub fn split1<'a, T: MyFromStr<'a>>(input: &'a str) -> impl 'a + Iterator<Item =
     })
 }
 
+pub fn lines(input: &str) -> impl Iterator<Item = &str> {
+    split1(input)
+}
+
 /// Parse 2 items from each line, separated by ASCII whitespace
 pub fn split2<'a, T0: MyFromStr<'a>, T1: MyFromStr<'a>>(
     input: &'a str,
 ) -> impl 'a + Iterator<Item = (T0, T1)> {
-    lines(input).filter_map(|line| {
+    lines_untrimmed(input).filter_map(|line| {
         let mut parts = line.split_ascii_whitespace();
         let Some(part0) = parts.next() else {
             // skip blank lines
@@ -85,7 +89,7 @@ pub fn split2<'a, T0: MyFromStr<'a>, T1: MyFromStr<'a>>(
 pub fn split3<'a, T0: MyFromStr<'a>, T1: MyFromStr<'a>, T2: MyFromStr<'a>>(
     input: &'a str,
 ) -> impl 'a + Iterator<Item = (T0, T1, T2)> {
-    lines(input).filter_map(|line| {
+    lines_untrimmed(input).filter_map(|line| {
         let mut parts = line.split_ascii_whitespace();
         let Some(part0) = parts.next() else {
             // skip blank lines
@@ -104,7 +108,7 @@ pub fn split3<'a, T0: MyFromStr<'a>, T1: MyFromStr<'a>, T2: MyFromStr<'a>>(
 pub fn split4<'a, T0: MyFromStr<'a>, T1: MyFromStr<'a>, T2: MyFromStr<'a>, T3: MyFromStr<'a>>(
     input: &'a str,
 ) -> impl 'a + Iterator<Item = (T0, T1, T2, T3)> {
-    lines(input).filter_map(|line| {
+    lines_untrimmed(input).filter_map(|line| {
         let mut parts = line.split_ascii_whitespace();
         let Some(part0) = parts.next() else {
             // skip blank lines
@@ -131,7 +135,7 @@ pub fn split5<
 >(
     input: &'a str,
 ) -> impl 'a + Iterator<Item = (T0, T1, T2, T3, T4)> {
-    lines(input).filter_map(|line| {
+    lines_untrimmed(input).filter_map(|line| {
         let mut parts = line.split_ascii_whitespace();
         let Some(part0) = parts.next() else {
             // skip blank lines
@@ -150,7 +154,7 @@ pub fn split5<
 
 /// Parse some number items from each line, separated by ASCII whitespace
 pub fn splitn<'a, T: MyFromStr<'a>>(input: &'a str) -> impl 'a + Iterator<Item = Vec<T>> {
-    lines(input).filter_map(|line| {
+    lines_untrimmed(input).filter_map(|line| {
         let mut parts = line.split_ascii_whitespace();
         let Some(part0) = parts.next() else {
             // skip blank lines
